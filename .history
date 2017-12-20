@@ -1,0 +1,300 @@
+load test
+exit
+load
+lo
+load exit
+exit
+load
+load 
+exit
+load 
+exit
+load test 
+exir
+exit
+load test 
+exit
+load test 
+set a
+unload
+exit
+load test 
+exit
+load test 
+A 
+a
+A
+exit
+load test 
+A
+unload 
+A
+a
+A
+exit
+A
+load test 
+A
+exit
+load test 
+unload 
+A
+load test 
+A
+exit
+load test 
+exit
+list 
+load test 
+configs 
+exit
+load test 
+configs 
+exit
+load test 
+configs 
+set a e
+set d f
+set c a
+configs 
+cls
+exit
+load test 
+set d a
+unload 
+exit
+load test 
+configs 
+set a "A"
+set b "B"
+set c "C"
+configs 
+cls
+exit
+load test 
+exit
+load test 
+exit 
+load test 
+exit
+load test 
+exit
+load test 
+A
+a
+B
+b
+C
+exit
+load test 
+exit
+load test 
+exit
+load test 
+set a
+exit
+load test 
+exit
+load test 
+set arch 
+exit
+load test 
+A
+a
+A
+B
+C
+clear
+cls
+exit
+load test 
+A
+a
+set a "a"
+set b "b"
+configs 
+unload 
+coNFIGS
+configs
+exit
+load test 
+A
+cls
+exit
+load test 
+cls
+exit
+load 
+exit
+load test 
+exit
+load test 
+A
+B
+C
+c
+set a test
+exit
+load test 
+exi
+exit
+load test 
+A
+a
+exit
+load test 
+exit
+load test 
+A
+a
+A
+B
+C
+x
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+exit
+set fname mba
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+generate
+unload 
+exit
+load casm 
+set fname mba
+set nocomm 1
+generate
+exit
+load casm 
+set fname mba
+set nocomm 1
+generate
+exit
+load casm 
+set nocomm 1
+set fname mba
+generate 
+set nocomm 0
+generate 
+cls
+unload 
+exit
+load shellcode 
+set fname mba
+generate 
+exit
+load shellcode 
+set fname mba
+generate
+exit
+load shellcode 
+set fname mba
+generate
+exit
+load casm 
+set fname mba
+set nocomm 0
+generate 
+set nocomm 1
+generate 
+exit
+cls
+exit
+load casm 
+set fname mba
+set nocomm 0
+generate 
+exit
+load casm 
+set fname mba
+set nocomm 0
+generate 
+set nocomm 1
+generate 
+exit
+exi
+exit
+load casm 
+set fname 
+set fname mba
+set nocomm 0
+generate 
+cks
+cls
+generate 
+exit
+load casm 
+set fname mba
+set nocomm 1
+generate 
+unload 
+exit

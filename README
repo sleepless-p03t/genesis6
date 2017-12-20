@@ -1,0 +1,149 @@
+
+OVERVIEW:
+
+Genesis is primarily a framework inspired by Metasploit Framework and the
+Social Engineering Toolkit.
+
+PURPOSE:
+
+Genesis was developed as a malware development platform targeting Windows
+operating systems
+
+CREDITING:
+
+Genesis was created by Ryan Wade, but is heavily inspired by Metasploit, and
+any similarities in code beyond the inevitable are purely coincidental
+
+HOWEVER, some of the modules created by Ryan use techniques created by other
+individuals/groups who have posted tutorials of their work online for public usage.
+Ryan has attempted to give credit to the individuals/groups, but does not claim
+any ownership of any code or technique that is not sited, except for those
+specifically  discussed in the GOALS section below.
+
+CUSTOMIZATION:
+
+Genesis is, at its core, little more than a user interface framework whose
+functionality resides almost exclusively in modules. Due to the dynamic
+capabilities of modular functionality, Genesis is easy to modify and expand.
+For information on module development, see the TUTORIAL section
+
+GOALS:
+
+In researching various malware execution techniques and antivirus bypassing
+techniques, various weaknesses were found in both code and techniques. Some of
+the functions prebuilt into Genesis are Ryan's way of addressing some of these
+problems.
+
+Some problems found include:
+- UAC bypass patches
+- IP addressing
+- plaintext analysis in code
+
+Many of the prebuilt functions utilize a social engineering approach to fortify
+the code:
+
+** The following are techniques Ryan has not seen in malware tutorials and
+assumes are his own work, but if any individual finds an existing tutorial
+concerning any of the following used for the specific tasks stated below, they
+are to contact Ryan with a link to the original source so that credit may be
+properly given **
+
+MITM phishing tactics including ARP and DNS spoofing
+	- DNS redirect/spoof to add legitimacy to plaintext IP addresses
+
+UAC elevation scripts* to counteract UAC patches/legal concerns
+	- Victim controlled permissions to malware access
+
+General code fortification through indirection and dynamic development
+
+* Ryan does not claim to be the original developer of these scripts
+
+TUTORIAL:
+
+Overview: Genesis is Ruby based, and all modules MUST be Ruby scripts for
+Genesis to work properly
+
+If another language is needed, the source code and/or the execution thereof
+needs to be wrapped within the Ruby script
+
+Example:
+
+<begin ruby>
+
+	def function
+		system <<~EOS
+			# bash script here
+		EOS
+	end
+
+<end ruby>
+
+Modules: Modules are packaged as gemfiles whose contents are extracted at runtime
+
+Module scripts MUST contain the following functions:
+	
+	def mname
+		"module name"
+	end
+
+	def cmds
+		[ "command1", "command2", "command3" ]
+	end
+
+	def vars
+		[ "var1", "var2", "var3" ]
+	end
+
+	def use
+		[ ]
+	end
+
+	def generate(vars)
+		# vars is a hash of variables and their values
+	end
+
+For a list of limitations of module configs see PREDEFINED
+
+Note: in order for the custom commands defined in cmds() to execute, their
+corresponding functions must be the exact same name as their string
+representations
+
+Ex:
+	def command1
+		
+	end
+
+Limitations of module persistence: module scripts do not remain in memory for
+long, and have minimal interaction with Genesis' core. If any data beyond
+variables and their values need to be stored, the data will need to be stored in a
+file and parsed as necessary. Genesis is not capable of doing this itself.
+
+PREDEFINED:
+
+Commands:
+	clear
+	cls
+	load
+	unload
+	set
+	generate (linker function between module and core; how variables stored
+		  from "set" are returned to the module)
+	configs
+	list
+	exit
+
+Variables:
+	Most flags/options for msfvenom, anything not already defined needs to
+	be added manually
+
+Any overlap of the predefined options and the custom module options could
+result in unexpected code execution and/or application failure
+
+LEGAL:
+
+Ryan Wade does not condone or take any responsibility for any
+illegitimate/illegal usage of Genesis or its capabilities. Genesis is designed
+purely as a tool for experimentation and learning at the user's own risk.
+
+CONTACT:
+rwcreator@gmail.com

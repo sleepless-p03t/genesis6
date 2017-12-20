@@ -1,0 +1,32 @@
+#!/bin/bash
+
+if [[ "$1" == "" ]]; then
+	echo "Usage: mkmod <modname>"
+	exit 1
+fi
+
+if [ -d $1 ]; then
+	echo "Module already exists. Aborting"
+	exit 1
+fi
+
+mkdir -p $1/lib/
+
+cat > $1/$1.gemspec <<EOF
+Gem::Specification.new do |s|
+	s.name = ''
+	s.version = '0.0.0'
+	s.summary = ""
+	s.description = ""
+	s.authors = [ "" ]
+	s.email = ""
+	s.files = [ "lib/" ]
+	s.homepage = ""
+	s.license = ''
+end
+EOF
+
+echo "Module skeleton directory:$1 created"
+echo "Please edit $1/$1.gemspec and add scripts and any dependencies in $1/lib/"
+echo
+echo "To pack your module into a gem and add it to genesis, run bgem $1"

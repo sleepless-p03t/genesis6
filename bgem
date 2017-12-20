@@ -1,0 +1,60 @@
+#!/bin/bash
+
+GEMDIR=$1
+PARENT=`pwd`
+
+if [ ! -d $GEMDIR ]; then
+	echo "Unknown directory: $GEMDIR"
+	exit 1
+fi
+
+cd $GEMDIR
+
+SPEC=0
+GEM=0
+if [ -f *.gemspec ]; then
+	SPEC=1
+fi
+
+if [ -f *.gem ]; then
+	GEM=1
+else
+	GEM=0
+fi
+
+if [[ $SPEC -eq 0 ]]; then
+	echo "Missing gemspec"
+	exit 1
+fi
+
+if [[ $GEM -eq 1 ]]; then
+	rm *.gem
+fi
+
+gem build *.gemspec
+
+if [[ $? -ne 0 ]]; then
+	echo "gem build failed."
+	exit 1
+else
+	gem=`ls *.gem | awk -F'-' '{ print $1 }'`
+	mv *.gem $gem.gem
+	if [ -f $PARENT/modules/$gem.gem ]; then
+		echo "Error: Cannot add module: gem exists"
+		exit 1
+	else
+		mv $gem.gem $PARENT/modules/
+		echo "Module $gem added to Genesis"
+		read -r -p "Would you like to delete the gem directory? [Y/n] " response
+		case "$response" in
+			[yY][eE][sS]|[yY])
+				cd $PARENT
+				rm -rf $GEMDIR/
+				exit 0
+				;;
+			*)
+				exit 0
+				;;
+		esac
+	fi
+fi
