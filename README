@@ -11,10 +11,10 @@ operating systems
 
 CREDITING:
 
-Genesis was created by Ryan Wade, but is heavily inspired by Metasploit, and
+Genesis was created by Sleepless, but is heavily inspired by Metasploit, and
 any similarities in code beyond the inevitable are purely coincidental
 
-HOWEVER, some of the modules created by Ryan use techniques created by other
+HOWEVER, some of the modules created by Sleepless use techniques created by other
 individuals/groups who have posted tutorials of their work online for public usage.
 Ryan has attempted to give credit to the individuals/groups, but does not claim
 any ownership of any code or technique that is not sited, except for those
@@ -31,7 +31,7 @@ GOALS:
 
 In researching various malware execution techniques and antivirus bypassing
 techniques, various weaknesses were found in both code and techniques. Some of
-the functions prebuilt into Genesis are Ryan's way of addressing some of these
+the functions prebuilt into Genesis are Sleepless's way of addressing some of these
 problems.
 
 Some problems found include:
@@ -42,10 +42,10 @@ Some problems found include:
 Many of the prebuilt functions utilize a social engineering approach to fortify
 the code:
 
-** The following are techniques Ryan has not seen in malware tutorials and
+** The following are techniques Sleepless has not seen in malware tutorials and
 assumes are his own work, but if any individual finds an existing tutorial
 concerning any of the following used for the specific tasks stated below, they
-are to contact Ryan with a link to the original source so that credit may be
+are to contact Sleepless with a link to the original source so that credit may be
 properly given **
 
 MITM phishing tactics including ARP and DNS spoofing
@@ -56,7 +56,7 @@ UAC elevation scripts* to counteract UAC patches/legal concerns
 
 General code fortification through indirection and dynamic development
 
-* Ryan does not claim to be the original developer of these scripts
+* Sleepless does not claim to be the original developer of these scripts
 
 TUTORIAL:
 
@@ -141,9 +141,9 @@ result in unexpected code execution and/or application failure
 
 LEGAL:
 
-Ryan Wade does not condone or take any responsibility for any
+Sleepless does not condone or take any responsibility for any
 illegitimate/illegal usage of Genesis or its capabilities. Genesis is designed
 purely as a tool for experimentation and learning at the user's own risk.
 
 CONTACT:
-rwcreator@gmail.com
+sleepless.genesis6@gmail.com
