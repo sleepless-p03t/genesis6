@@ -37,10 +37,10 @@ def generate(vhash)
 
 	EOS
 
-	java_path = "~/.genesis/java"
-	src_path = "~/.genesis/java/src"
-	bin_path = "~/.genesis/java/bin"
-	jar_path = "~/.genesis/java/jar"
+	java_path = "#{Dir.home}/.genesis/java"
+	src_path = "#{Dir.home}/.genesis/java/src"
+	bin_path = "#{Dir.home}/.genesis/java/bin"
+	jar_path = "#{Dir.home}/.genesis/java/jar"
 		
 	clazz = vhash["class"]
 	nmethod = vhash["nmethod"]
