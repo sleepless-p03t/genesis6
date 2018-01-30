@@ -104,7 +104,6 @@ MAIN = [ 'exit', 'clear', 'cls', 'load', 'list' ]
 CompletionProc = Proc.new do |str|
 	current = Readline.line_buffer
 	
-	
 	# First two conditions ensure genesis doesn't crash when attempting tab completion after unknown commands
 	if current != "" && current != " " && !MAIN.any? { |s| s.include?(current.split(' ')[0]) }
 		[]
