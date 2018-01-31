@@ -105,9 +105,9 @@ CompletionProc = Proc.new do |str|
 	current = Readline.line_buffer
 	
 	# First two conditions ensure genesis doesn't crash when attempting tab completion after unknown commands
-	if current != "" && current != " " && !MAIN.any? { |s| s.include?(current.split(' ')[0]) }
+	if Lookup.cur_module == "" && current != "" && current != " " && !MAIN.any? { |s| s.include?(current.split(' ')[0]) }
 		[]
-	elsif current != "" && current != " " && Lookup.cur_module != "" && !Lookup.lookup(Lookup.cur_module, "main").any? { |s| s.include?(current.split(' ')[0]) }
+	elsif current != "" && current != " " && Lookup.cur_module != "" && !Lookup.lookup(Lookup.cur_module, "main").any? { |s| s.include?(current.split(' ')[0]) } && current.split(' ')[0] != "set"
 		[]
 	elsif current.start_with?("load ")
 		mod = current.split(" ")[1]
