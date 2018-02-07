@@ -13,7 +13,7 @@ def vars
 end
 
 def use
-	[ "venom" ]
+	[ "msfvenom" ]
 end
 
 def generate(vhash)
