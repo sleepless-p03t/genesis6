@@ -26,7 +26,22 @@ Gem::Specification.new do |s|
 end
 EOF
 
+cat > $1/readme <<EOF
+__README__
+
+__DEB_DEPS__
+
+__GEM_DEPS__
+
+
+EOF
+
 echo "Module skeleton directory:$1 created"
 echo "Please edit $1/$1.gemspec and add scripts and any dependencies in $1/lib/"
+echo
+echo "Please edit $1/readme; do not remove section heads or change their order"
+echo -e "\t__README__ : additional info regarding the module"
+echo -e "\t__DEB_DEPS__ : list deb packages (apt-get install-able) required for the module"
+echo -e "\t__GEM_DEPS__ : list gems required for the module"
 echo
 echo "To pack your module into a gem and add it to genesis, run bgem $1"
