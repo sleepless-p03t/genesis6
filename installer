@@ -1,0 +1,112 @@
+#!/bin/bash
+
+# curl from this URL
+URL="https://raw.githubusercontent.com/sleepless-p03t/genesis6/master/"
+
+# install gems
+function gem_install
+{
+	local gem="$1"
+	local found=`gem list -i "^$gem$"`
+	if [[ "$found" == "false" ]]; then
+		sudo gem install "$gem"
+		echo
+	else
+		echo -e "Gem $gem already installed"
+	fi
+}
+
+# install deb pkgs
+function pkg_install
+{
+	local pkg="$1"
+	dpkg-query -l "$pkg" &> /dev/null
+	if [ $? -eq 1 ]; then
+		echo -e "$pkg not installed. Installing\n"
+		sudo apt-get install $pkg
+	else
+		echo -e "$pkg already installed"
+	fi
+}
+
+mkdir -p $HOME/genesis6/modules
+mkdir -p $HOME/genesis6/.core/gems
+mkdir -p $HOME/genesis6/.core/icons
+
+echo "Preconfiguring multi-arch and wine"
+multiarch=`wine cmd /c "exit" 2>&1 | grep '"dpkg --add-architecture i386"'`
+_wine32=`wine cmd /c "exit" 2>&1 | grep '"apt-get install wine32"'`
+
+if [[ "$multiarch" != "" ]]; then
+	sudo dpkg --add-architecture i386
+	sudo apt-get update
+fi
+
+if [[ "$_wine32" != "" ]]; then
+	echo "wine32 not installed. Installing."
+	sudo apt-get install wine32
+else
+	echo "wine32 already installed"
+fi
+
+echo "Setting up curl"
+pkg_install "curl"
+
+pushd $HOME/genesis6 > /dev/null
+echo "Downloading Genesis core..."
+curl -s $URL/genesis -o genesis
+curl -s $URL/mkmod -o mkmod
+curl -s $URL/bgem -o bgem
+curl -s $URL/.core/gems/internals.gem -o internals.gem
+mv internals.gem .core/gems/
+curl -s $URL/.core/icons/icon1 -o icon1
+curl -s $URL/.core/icons/icon2 -o icon2
+curl -s $URL/.core/icons/icon3 -o icon3
+curl -s $URL/.core/icons/icon4 -o icon4
+curl -s $URL/.core/icons/icon5 -o icon5
+
+for i in `seq 1 5`; do
+	mv "icon$i" .core/icons/
+done
+
+touch .history
+
+curl -s $URL/README -o README
+popd > /dev/null
+
+curl -s "$URL/master.list" -o master.list
+
+#installs all modules
+while read -r line; do
+	if [[ "$line" == "BEGIN_"* ]]; then
+		break
+	elif [[ "$line" == "gem:"* ]]; then
+		_gem=`echo "$line" | awk -F':' '{ print $NF }'`
+		gem_install "$_gem"
+	elif [[ "$line" == "deb:"* ]]; then
+		_deb=`echo "$line" | awk -F':' '{ print $NF }'`
+		pkg_install "$_deb"
+	else
+		while read -r files; do
+			directory=`echo "${files%/*}"`
+			file=`echo "${files##*/}"`
+			pushd $HOME/genesis6 > /dev/null
+			curl -s "$URL/modules/$line.gem" -o "$line.gem"
+			mv "$line.gem" modules/
+			mkdir -p $directory
+			curl -s $URL/$files -o $file
+			mv "$file" "$directory"
+			popd > /dev/null
+		done< <(awk "/BEGIN_$line/{flag=1;next}/END_$line/{flag=0}flag" master.list)
+	fi
+done< <(cat master.list | sed '/^\s*$/d')
+
+rm master.list
+
+echo '#!/bin/bash' > /usr/local/bin/genesis
+echo >> /usr/local/bin/genesis
+echo 'pushd $HOME/genesis6 > /dev/null' >> /usr/local/bin/genesis
+echo 'ruby genesis "$@"' >> /usr/local/bin/genesis
+echo 'popd > /dev/null' >> /usr/local/bin/genesis
+
+sudo chmod +x /usr/local/bin/genesis
