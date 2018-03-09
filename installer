@@ -114,7 +114,11 @@ echo -n "Creating exec script and launcher..."
 echo '#!/bin/bash' > /usr/local/bin/genesis
 echo >> /usr/local/bin/genesis
 echo 'pushd $HOME/genesis6 > /dev/null' >> /usr/local/bin/genesis
-echo 'ruby genesis "$@"' >> /usr/local/bin/genesis
+echo 'if [ -d .runtime ]; then' >> /usr/local/bin/genesis
+echo -e "\techo -e \"\\e[1;31mGenesis already running. Aborting.\\e[0m\"" >> /usr/local/bin/genesis
+echo 'else' >> /usr/local/bin/genesis
+echo -e "\truby genesis \"\$@\"" >> /usr/local/bin/genesis
+echo 'fi' >> /usr/local/bin/genesis
 echo 'popd > /dev/null' >> /usr/local/bin/genesis
 
 sudo chmod +x /usr/local/bin/genesis
