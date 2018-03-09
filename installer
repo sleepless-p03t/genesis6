@@ -52,8 +52,8 @@ fi
 echo "Setting up curl"
 pkg_install "curl"
 
+echo -n "Downloading Genesis core..."
 pushd $HOME/genesis6 > /dev/null
-echo "Downloading Genesis core..."
 curl -s $URL/genesis -o genesis
 curl -s $URL/mkmod -o mkmod
 curl -s $URL/bgem -o bgem
@@ -74,6 +74,9 @@ touch .history
 curl -s $URL/README -o README
 popd > /dev/null
 
+echo -e "\b\b\b [done]"
+
+echo "Installing modules and dependencies..."
 curl -s "$URL/master.list" -o master.list
 
 #installs all modules
@@ -87,6 +90,7 @@ while read -r line; do
 		_deb=`echo "$line" | awk -F':' '{ print $NF }'`
 		pkg_install "$_deb"
 	else
+		echo -n "Installing module $line..."
 		while read -r files; do
 			directory=`echo "${files%/*}"`
 			file=`echo "${files##*/}"`
@@ -98,10 +102,14 @@ while read -r line; do
 			mv "$file" "$directory"
 			popd > /dev/null
 		done< <(awk "/BEGIN_$line/{flag=1;next}/END_$line/{flag=0}flag" master.list)
+		echo -e "\b\b\b [done]"
 	fi
 done< <(cat master.list | sed '/^\s*$/d')
 
 rm master.list
+echo "Finished installing modules"
+
+echo -n "Creating exec script and launcher..."
 
 echo '#!/bin/bash' > /usr/local/bin/genesis
 echo >> /usr/local/bin/genesis
@@ -110,3 +118,18 @@ echo 'ruby genesis "$@"' >> /usr/local/bin/genesis
 echo 'popd > /dev/null' >> /usr/local/bin/genesis
 
 sudo chmod +x /usr/local/bin/genesis
+
+pushd $HOME/genesis6 > /dev/null
+curl -s $URL/gecko.png -o gecko.png
+popd > /dev/null
+
+DSKPATH="/usr/share/applications/genesis.desktop"
+echo "[Desktop Entry]" > $DSKPATH
+echo "Name=Genesis" >> $DSKPATH
+echo "Encoding=UTF-8" >> $DSKPATH
+echo "Exec=sh -c \"cd $HOME/genesis6/ && ruby genesis; \${SHELL:-bash}\"" >> $DSKPATH
+echo "Icon=$HOME/genesis6/gecko.png" >> $DSKPATH
+echo "StartupNotify=false" >> $DSKPATH
+echo "Terminal=true" >> $DSKPATH
+echo "Type=Application" >> $DSKPATH
+echo -e "\b\b\b [done]"
