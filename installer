@@ -29,65 +29,63 @@ function pkg_install
 	fi
 }
 
-function install_core
-{
-	mkdir -p $HOME/genesis6/modules
-	mkdir -p $HOME/genesis6/.core/gems
-	mkdir -p $HOME/genesis6/.core/icons
+mkdir -p $HOME/genesis6/modules
+mkdir -p $HOME/genesis6/.core/gems
+mkdir -p $HOME/genesis6/.core/icons
 
-	echo "Preconfiguring multi-arch and wine"
-	multiarch=`wine cmd /c "exit" 2>&1 | grep '"dpkg --add-architecture i386"'`
-	_wine32=`wine cmd /c "exit" 2>&1 | grep '"apt-get install wine32"'`
+echo "Preconfiguring multi-arch and wine"
+multiarch=`wine cmd /c "exit" 2>&1 | grep '"dpkg --add-architecture i386"'`
+_wine32=`wine cmd /c "exit" 2>&1 | grep '"apt-get install wine32"'`
 
-	if [[ "$multiarch" != "" ]]; then
-		sudo dpkg --add-architecture i386
-		sudo apt-get update
-	fi
+if [[ "$multiarch" != "" ]]; then
+	sudo dpkg --add-architecture i386
+	sudo apt-get update
+fi
 
-	if [[ "$_wine32" != "" ]]; then
-		echo "wine32 not installed. Installing."
-		sudo apt-get install wine32
-	else
-		echo "wine32 already installed"
-	fi
+if [[ "$_wine32" != "" ]]; then
+	echo "wine32 not installed. Installing."
+	sudo apt-get install wine32
+else
+	echo "wine32 already installed"
+fi
 
-	echo "Setting up curl"
-	pkg_install "curl"
+echo "Setting up curl"
+pkg_install "curl"
 
-	echo -n "Downloading Genesis core..."
-	pushd $HOME/genesis6 > /dev/null
-	curl -s $URL/genesis -o genesis
-	curl -s $URL/mkmod -o mkmod
-	curl -s $URL/bgem -o bgem
-	curl -s $URL/.core/gems/internals.gem -o internals.gem
-	mv internals.gem .core/gems/
-	curl -s $URL/.core/icons/icon1 -o icon1
-	curl -s $URL/.core/icons/icon2 -o icon2
-	curl -s $URL/.core/icons/icon3 -o icon3
-	curl -s $URL/.core/icons/icon4 -o icon4
-	curl -s $URL/.core/icons/icon5 -o icon5
+echo -n "Downloading Genesis core..."
+pushd $HOME/genesis6 > /dev/null
+curl -s $URL/genesis -o genesis
+curl -s $URL/mkmod -o mkmod
+curl -s $URL/bgem -o bgem
+curl -s $URL/.core/gems/internals.gem -o internals.gem
+mv internals.gem .core/gems/
+curl -s $URL/.core/icons/icon1 -o icon1
+curl -s $URL/.core/icons/icon2 -o icon2
+curl -s $URL/.core/icons/icon3 -o icon3
+curl -s $URL/.core/icons/icon4 -o icon4
+curl -s $URL/.core/icons/icon5 -o icon5
 
-	for i in `seq 1 5`; do
-		mv "icon$i" .core/icons/
-	done
+for i in `seq 1 5`; do
+	mv "icon$i" .core/icons/
+done
 
-	touch .history
+touch .history
 
-	curl -s $URL/README -o README
-	popd > /dev/null
+curl -s $URL/README -o README
+popd > /dev/null
 
-	echo -e "\b\b\b [done]"
-}
-	echo "Installing modules and dependencies..."
-	curl -s "$URL/master.list" -o master.list
+echo -e "\b\b\b [done]"
 
-	#installs all modules
-	while read -r line; do
-		if [[ "$line" == "BEGIN_"* ]]; then
-			break
-		elif [[ "$line" == "gem:"* ]]; then
-			_gem=`echo "$line" | awk -F':' '{ print $NF }'`
-			gem_install "$_gem"
+echo "Installing modules and dependencies..."
+curl -s "$URL/master.list" -o master.list
+
+#installs all modules
+while read -r line; do
+	if [[ "$line" == "BEGIN_"* ]]; then
+		break
+	elif [[ "$line" == "gem:"* ]]; then
+		_gem=`echo "$line" | awk -F':' '{ print $NF }'`
+		gem_install "$_gem"
 	elif [[ "$line" == "deb:"* ]]; then
 		_deb=`echo "$line" | awk -F':' '{ print $NF }'`
 		pkg_install "$_deb"
