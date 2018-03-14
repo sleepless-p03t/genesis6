@@ -61,7 +61,7 @@ end
 trap("INT", "SIG_IGN")
 
 do_cleanup = 1
-if File.file?(".runtime")
+if File.exist?(".runtime")
 	do_cleanup = 0
 	Output.err_msg("Genesis already running. Aborting", "")
 	exit
