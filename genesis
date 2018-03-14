@@ -2,6 +2,7 @@
 
 require 'readline'
 require 'colorize'
+require 'fileutils'
 
 # routine to count words in string
 class String
@@ -58,6 +59,13 @@ end
 
 # ignore ctrl+c
 trap("INT", "SIG_IGN")
+
+do_cleanup = 1
+if File.file?(".runtime")
+	do_cleanup = 0
+	Output.err_msg("Genesis already running. Aborting", "")
+	exit
+end
 
 system("mkdir .runtime")
 extract_resource('.core/gems/internals', '.runtime', true)
@@ -160,7 +168,11 @@ Readline.completer_word_break_characters = " "
 
 Readline.completion_proc = CompletionProc
 # add history file data to runtime history
-History.get_history.each { |h| Readline::HISTORY.push(h) }
+if File.file?(".history")
+	History.get_history.each { |h| Readline::HISTORY.push(h) }
+else
+	FileUtils.touch('.history')
+end
 
 prompt = "genesis"
 _module = ""
@@ -240,5 +252,7 @@ end
 
 # cleanup on exit
 at_exit do
-	system("rm -rf .runtime/")
+	if do_cleanup == 1
+		system("rm -rf .runtime/")
+	end
 end
