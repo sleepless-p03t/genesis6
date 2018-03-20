@@ -169,7 +169,7 @@ else
 	if File.file?(".history")
 		History.get_history.each { |h| Readline::HISTORY.push(h) }
 	else
-		FileUtils.touch('.history')
+		system("echo > .history")
 	end
 
 	prompt = "genesis"
