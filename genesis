@@ -62,7 +62,9 @@ do_cleanup = 1
 if File.exist?(".runtime")
 	do_cleanup = 0
 else
-
+	if !File.file?(".history")
+		system("touch .history")
+	end
 	system("mkdir .runtime")
 	extract_resource('.core/gems/internals', '.runtime', true)
 
