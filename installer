@@ -69,6 +69,8 @@ for i in `seq 1 5`; do
 	mv "icon$i" .core/icons/
 done
 
+touch .history
+
 curl -s $URL/README -o README
 popd > /dev/null
 
