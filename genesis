@@ -57,13 +57,10 @@ def extract_resource(gem, destination, _load)
 	end
 end
 
-# ignore ctrl+c
-trap("INT", "SIG_IGN")
-
+# Genesis already running?
 do_cleanup = 1
 if File.exist?(".runtime")
 	do_cleanup = 0
-	Output.err_msg("Genesis already running. Aborting", "")
 else
 
 	system("mkdir .runtime")
@@ -71,7 +68,10 @@ else
 
 	flag = ARGV[0]
 
-# icon output
+	# ignore ctrl+c
+	trap("INT", "SIG_IGN")
+
+	# icon output
 	if flag != '-q'
 		cols = `tput cols | tr -d '\n'`.to_i
 		if cols > 96
@@ -249,9 +249,13 @@ else
 		end
 	end
 end
+
 # cleanup on exit
+# Display error if Genesis already running
 at_exit do
 	if do_cleanup == 1
 		system("rm -rf .runtime/")
+	else
+		puts("Genesis already running. Aborting")
 	end
 end
