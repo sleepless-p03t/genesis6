@@ -70,7 +70,6 @@ for i in `seq 1 5`; do
 done
 
 curl -s $URL/README -o README
-touch .history
 popd > /dev/null
 
 echo -e "\b\b\b [done]"
