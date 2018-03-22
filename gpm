@@ -101,44 +101,48 @@ function install_module
 {
 	local mod="$1"
 	local src="$2"
-
-	curl -s $URL/master.list -o master.list
-	if grep -Fxq "$mod" master.list; then
-		echo -en "\e[0;37mInstalling module $mod..."
-		while read -r line; do
-			if [[ "$line" == "BEGIN_"* ]]; then
-				break
-			elif [[ "$line" == "gem:"* ]]; then
-				_gem=`echo "$line" | awk -F':' '{ print $NF }'`
-				gem_install "$_gem"
-			elif [[ "$line" == "deb:"* ]]; then
-				_deb=`echo "$line" | awk -F':' '{ print $NF }'`
-				pkg_install "$_deb"
-			elif [[ "$line" == "$mod" ]]; then
-				pushd $HOME/genesis6 > /dev/null
-				curl -s "$URL/modules/$line.gem" -o "$line.gem"
-				mv "$line.gem" modules/
-				popd > /dev/null
-				if [[ "$src" != "" ]]; then
-					while read -r files; do
-						directory=`echo "${files%/*}"`
-						file=`echo "${files##*/}"`
-						pushd $HOME/genesis6 > /dev/null
-						mkdir -p $directory
-						curl -s $URL/$files -o $file
-						mv "$file" "$directory"
-						popd > /dev/null
-					done< <(awk "/BEGIN_$line/{flag=1;next}/END_$line/{flag=0}flag" master.list)
-				fi
-				echo -e "\b\b\b [\e[1;32mdone\e[0;37m]\e[0m"
-				break
-			fi
-		done< <(cat master.list | sed '/^\s*$/d')
-		pinfo "Module installed successfully"
+	
+	if [ -f "$HOME/genesis6/modules/$mod.gem" ]; then
+		pinfo "$mod already installed"
 	else
-		perr "Module not found: $mod"
+		curl -s $URL/master.list -o master.list
+		if grep -Fxq "$mod" master.list; then
+			echo -en "\e[0;37mInstalling module $mod..."
+			while read -r line; do
+				if [[ "$line" == "BEGIN_"* ]]; then
+					break
+				elif [[ "$line" == "gem:"* ]]; then
+					_gem=`echo "$line" | awk -F':' '{ print $NF }'`
+					gem_install "$_gem"
+				elif [[ "$line" == "deb:"* ]]; then
+					_deb=`echo "$line" | awk -F':' '{ print $NF }'`
+					pkg_install "$_deb"
+				elif [[ "$line" == "$mod" ]]; then
+					pushd $HOME/genesis6 > /dev/null
+					curl -s "$URL/modules/$line.gem" -o "$line.gem"
+					mv "$line.gem" modules/
+					popd > /dev/null
+					if [[ "$src" != "" ]]; then
+						while read -r files; do
+							directory=`echo "${files%/*}"`
+							file=`echo "${files##*/}"`
+							pushd $HOME/genesis6 > /dev/null
+							mkdir -p $directory
+							curl -s $URL/$files -o $file
+							mv "$file" "$directory"
+							popd > /dev/null
+						done< <(awk "/BEGIN_$line/{flag=1;next}/END_$line/{flag=0}flag" master.list)
+					fi
+					echo -e "\b\b\b [\e[1;32mdone\e[0;37m]\e[0m"
+					break
+				fi
+			done< <(cat master.list | sed '/^\s*$/d')
+			pinfo "Module installed successfully"
+		else
+			perr "Module not found: $mod"
+		fi
+		rm master.list
 	fi
-	rm master.list
 }
 
 #install the core of genesis
