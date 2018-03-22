@@ -74,21 +74,25 @@ function install_all
 			_deb=`echo "$line" | awk -F':' '{ print $NF }'`
 			pkg_install "$_deb"
 		else
-			echo -en "\e[0;37mInstalling module $line..."
-			pushd $HOME/genesis6 > /dev/null
-			curl -s "$URL/modules/$line.gem" -o "$line.gem"
-			mv "$line.gem" modules/
-			popd > /dev/null
-			while read -r files; do
-				directory=`echo "${files%/*}"`
-				file=`echo "${files##*/}"`
+			if [ ! -f "$HOME/genesis6/modules/$line.gem" ]; then
+				echo -en "\e[0;37mInstalling module $line..."
 				pushd $HOME/genesis6 > /dev/null
-				mkdir -p $directory
-				curl -s $URL/$files -o $file
-				mv "$file" "$directory"
+				curl -s "$URL/modules/$line.gem" -o "$line.gem"
+				mv "$line.gem" modules/
 				popd > /dev/null
-			done< <(awk "/BEGIN_$line/{flag=1;next}/END_$line/{flag=0}flag" master.list)
-			echo -e "\b\b\b [\e[1;32mdone\e[0;37m]\e[0m"
+				while read -r files; do
+					directory=`echo "${files%/*}"`
+					file=`echo "${files##*/}"`
+					pushd $HOME/genesis6 > /dev/null
+					mkdir -p $directory
+					curl -s $URL/$files -o $file
+					mv "$file" "$directory"
+					popd > /dev/null
+				done< <(awk "/BEGIN_$line/{flag=1;next}/END_$line/{flag=0}flag" master.list)
+				echo -e "\b\b\b [\e[1;32mdone\e[0;37m]\e[0m"
+			else
+				pinfo "$line already installed"
+			fi
 		fi
 	done< <(cat master.list | sed '/^\s*$/d')
 
