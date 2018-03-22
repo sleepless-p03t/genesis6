@@ -2,6 +2,7 @@
 
 URL="https://raw.githubusercontent.com/sleepless-p03t/genesis6/master/"
 
+# print info message
 function pinfo
 {
 	local msg="$1"
@@ -11,6 +12,7 @@ function pinfo
 	echo -e "$msg\e[0m"
 }
 
+#print error message
 function perr
 {
 	local msg="$1"
@@ -20,15 +22,17 @@ function perr
 	echo -e "$msg\e[0m"
 }
 
+#print install message
 function pinstall
 {
 	local msg="$1"
 	echo -en "\e[0;37m["
 	echo -en "\e[1;32m+"
-	echo -en "\e[1;37m] "
+	echo -en "\e[0;37m] "
 	echo -e "$msg\e[0m"
 }
 
+#install ruby gem if not already installed
 function gem_install
 {
 	local gem="$1"
@@ -41,6 +45,7 @@ function gem_install
 	fi
 }
 
+#install deb package if not already installed
 function pkg_install
 {
 	local pkg="$1"
@@ -53,6 +58,7 @@ function pkg_install
 	fi
 }
 
+#install all available modules
 function install_all
 {
 	pinstall "Installing all modules and dependencies"
@@ -68,19 +74,21 @@ function install_all
 			_deb=`echo "$line" | awk -F':' '{ print $NF }'`
 			pkg_install "$_deb"
 		else
-			echo -n "Installing module $line..."
+			echo -en "\e[0;37mInstalling module $line..."
+			pushd $HOME/genesis6 > /dev/null
+			curl -s "$URL/modules/$line.gem" -o "$line.gem"
+			mv "$line.gem" modules/
+			popd > /dev/null
 			while read -r files; do
 				directory=`echo "${files%/*}"`
 				file=`echo "${files##*/}"`
 				pushd $HOME/genesis6 > /dev/null
-				curl -s "$URL/modules/$line.gem" -o "$line.gem"
-				mv "$line.gem" modules/
 				mkdir -p $directory
 				curl -s $URL/$files -o $file
 				mv "$file" "$directory"
 				popd > /dev/null
 			done< <(awk "/BEGIN_$line/{flag=1;next}/END_$line/{flag=0}flag" master.list)
-			echo -e "\b\b\b [done]"
+			echo -e "\b\b\b [\e[1;32mdone\e[0;37m]\e[0m"
 		fi
 	done< <(cat master.list | sed '/^\s*$/d')
 
@@ -88,6 +96,52 @@ function install_all
 	pinfo "Finished installing modules"
 }
 
+#install individual module
+function install_module
+{
+	local mod="$1"
+	local src="$2"
+
+	curl -s $URL/master.list -o master.list
+	if grep -Fxq "$mod" master.list; then
+		echo -en "\e[0;37mInstalling module $mod..."
+		while read -r line; do
+			if [[ "$line" == "BEGIN_"* ]]; then
+				break
+			elif [[ "$line" == "gem:"* ]]; then
+				_gem=`echo "$line" | awk -F':' '{ print $NF }'`
+				gem_install "$_gem"
+			elif [[ "$line" == "deb:"* ]]; then
+				_deb=`echo "$line" | awk -F':' '{ print $NF }'`
+				pkg_install "$_deb"
+			elif [[ "$line" == "$mod" ]]; then
+				pushd $HOME/genesis6 > /dev/null
+				curl -s "$URL/modules/$line.gem" -o "$line.gem"
+				mv "$line.gem" modules/
+				popd > /dev/null
+				if [[ "$src" != "" ]]; then
+					while read -r files; do
+						directory=`echo "${files%/*}"`
+						file=`echo "${files##*/}"`
+						pushd $HOME/genesis6 > /dev/null
+						mkdir -p $directory
+						curl -s $URL/$files -o $file
+						mv "$file" "$directory"
+						popd > /dev/null
+					done< <(awk "/BEGIN_$line/{flag=1;next}/END_$line/{flag=0}flag" master.list)
+				fi
+				echo -e "\b\b\b [\e[1;32mdone\e[0;37m]\e[0m"
+				break
+			fi
+		done< <(cat master.list | sed '/^\s*$/d')
+		pinfo "Module installed successfully"
+	else
+		perr "Module not found: $mod"
+	fi
+	rm master.list
+}
+
+#install the core of genesis
 function install_core
 {
 	mkdir -p $HOME/genesis6/modules
@@ -114,7 +168,7 @@ function install_core
 	pinfo "Setting up curl"
 	pkg_install "curl"
 
-	echo -n "Downloading Genesis core..."
+	echo -en "\e[0;37mDownloading Genesis core..."
 	pushd $HOME/genesis6 > /dev/null
 	curl -s $URL/genesis -o genesis
 	curl -s $URL/gpm -o gpm
@@ -137,9 +191,7 @@ function install_core
 	curl -s $URL/README -o README
 	popd > /dev/null
 	
-	echo -e "\b\b\b [done]"
-
-	install_all
+	echo -e "\b\b\b [\e[1;32mdone\e[0;37m]\e[0m"
 
 	exec_path="/usr/local/bin"
 	if [ ! -f "$exec_path/genesis" ]; then
@@ -163,18 +215,59 @@ function install_core
 
 		chmod +x $exec_path/gpm
 	fi
-
-	dskpath="/usr/share/applications"
-	if [ ! -f "$dskpath/genesis.desktop" ]; then
-		pinfo "Creating launcher"
-		echo "[Desktop ENTRY]" > $dskpath/genesis.desktop
-		echo "Name=Genesis" >> $dskpath/genesis.desktop
-		echo "Encoding=UTF-8" >> $dskpath/genesis.desktop
-		echo "Exec=ruby $HOME/genesis6/genesis -s; \${SHELL:-bash}\"" >> $dskpath/genesis.desktop
-		echo "StartupNotify=false" >> $dskpath/genesis.desktop
-		echo "Terminal=true" >> $dskpath/genesis.desktop
-		echo "Type=Application" >> $dskpath/genesis.desktop
-	fi
 }
 
-install_core
+argc=$#
+
+if [ -z $1 ] || [[ "$1" == "help" ]]; then
+	echo "usage: "
+	echo -e "\tgpm install [--core | --all]"
+	echo "or"
+	echo -e "\tgpm add [--src] <module>"
+	echo "or"
+	echo -e "\tgpm help"
+	
+	exit 1
+fi
+
+if [[ "$1" == "install" ]]; then
+
+	if [ $argc -gt 2 ]; then
+		perr "Too many arguments"
+		exit 1
+	fi
+
+	if [[ "$2" == "--core" ]] || [ -z $2 ]; then
+		install_core
+	elif [[ "$2" == "--all" ]]; then
+		install_core
+		install_all
+	else
+		perr "Unknown option $2"
+		exit 1
+	fi
+elif [[ "$1" == "add" ]]; then
+	if [ $argc -eq 2 ]; then
+		if [[ "$2" == "--src" ]]; then
+			perr "missing module name"
+			exit 1
+		else
+			install_module "$2" ""
+		fi
+	elif [ $argc -eq 3 ]; then
+		if [[ "$2" == "--src" ]]; then
+			install_module "$3" "1"
+		elif [[ "$3" == "--src" ]]; then
+			install_module "$2" "1"
+		fi
+	elif [ $argc -eq 1 ]; then
+		perr "not enough parameters"
+		exit 1
+	elif [ $argc -gt 3 ]; then
+		perr "Too many arguments"
+		exit 1
+	fi
+elif [[ "$1" != "help" ]]; then
+	perr "Unknown command $1"
+	exit 1
+fi
