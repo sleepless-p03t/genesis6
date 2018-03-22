@@ -4,6 +4,36 @@ OVERVIEW:
 Genesis is primarily a framework inspired by Metasploit Framework and the
 Social Engineering Toolkit.
 
+INSTALLATION:
+
+You can download the entire repository if you want, but there's another option:
+
+1) Download the file gpm to a directory of your choice
+
+2) Run* gpm as follows:
+
+	a) If you just want to install genesis core:
+		bash gpm install core
+				or
+		bash gpm install
+
+	b) If you want to install everything:
+		bash gpm install all
+
+3) gpm acts as a manager for genesis
+
+	a) If you want to install an available module:
+		gpm add <module>
+	
+	b) If you want to install a module with its source (if available):
+		gpm add --src <module>
+				or
+		gpm add <module> --src
+
+4) Watch for updates to gpm, I may add more functionality in the future
+
+*gpm creates an exec script for itself and can be run directly as gpm instead of bash gpm
+			
 PURPOSE:
 
 Genesis was developed as a malware development platform targeting Windows

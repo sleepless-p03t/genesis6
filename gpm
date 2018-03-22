@@ -234,7 +234,7 @@ argc=$#
 # help
 if [ -z $1 ] || [[ "$1" == "help" ]]; then
 	echo "usage: "
-	echo -e "\tgpm install [--core | --all]"
+	echo -e "\tgpm install [core | all]"
 	echo "or"
 	echo -e "\tgpm add [--src] <module>"
 	echo "or"
@@ -253,9 +253,9 @@ if [[ "$1" == "install" ]]; then
 		exit 1
 	fi
 
-	if [[ "$2" == "--core" ]] || [ -z $2 ]; then
+	if [[ "$2" == "core" ]] || [ -z $2 ]; then
 		install_core
-	elif [[ "$2" == "--all" ]]; then
+	elif [[ "$2" == "all" ]]; then
 		install_core
 		install_all
 	else
@@ -269,14 +269,26 @@ elif [[ "$1" == "add" ]]; then
 			perr "missing module name"
 			exit 1
 		elif [[ "$2" == "all" ]]; then
+			if [ ! -d $HOME/genesis6 ]; then
+				install_core
+			fi
 			install_all
 		else
+			if [ ! -d $HOME/genesis6 ]; then
+				install_core
+			fi
 			install_module "$2" ""
 		fi
 	elif [ $argc -eq 3 ]; then
 		if [[ "$2" == "--src" ]]; then
+			if [ ! -d $HOME/genesis6 ]; then
+				install_core
+			fi
 			install_module "$3" "1"
 		elif [[ "$3" == "--src" ]]; then
+			if [ ! -d $HOME/genesis6 ]; then
+				install_core
+			fi
 			install_module "$2" "1"
 		fi
 	elif [ $argc -eq 1 ]; then
