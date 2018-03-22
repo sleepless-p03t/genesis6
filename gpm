@@ -1,0 +1,180 @@
+#!/bin/bash
+
+URL="https://raw.githubusercontent.com/sleepless-p03t/genesis6/master/"
+
+function pinfo
+{
+	local msg="$1"
+	echo -en "\e[0;37m["
+	echo -en "\e[1;34mi"
+	echo -en "\e[0;37m] "
+	echo -e "$msg\e[0m"
+}
+
+function perr
+{
+	local msg="$1"
+	echo -en "\e[0;37m["
+	echo -en "\e[1;31m!"
+	echo -en "\e[0;37m] "
+	echo -e "$msg\e[0m"
+}
+
+function pinstall
+{
+	local msg="$1"
+	echo -en "\e[0;37m["
+	echo -en "\e[1;32m+"
+	echo -en "\e[1;37m] "
+	echo -e "$msg\e[0m"
+}
+
+function gem_install
+{
+	local gem="$1"
+	local found=`gem list -i "^$gem$"`
+	if [[ "$found" == "false" ]]; then
+		sudo gem install "$gem"
+		echo
+	else
+		pinfo "Gem $gem already installed"
+	fi
+}
+
+function pkg_install
+{
+	local pkg="$1"
+	dpkg-query -l "$pkg" &> /dev/null
+	if [ $? -eq 1 ]; then
+		pinstall "$pkg not installed. Installing\n"
+		sudo apt-get install $pkg
+	else
+		pinfo "$pkg already installed"
+	fi
+}
+
+function install_all
+{
+	pinstall "Installing all modules and dependencies"
+	curl -s "$URL/master.list" -o master.list
+
+	while read -r line; do
+		if [[ "$line" == "BEGIN_"* ]]; then
+			break
+		elif [[ "$line" == "gem:"* ]]; then
+			_gem=`echo "$line" | awk -F':' '{ print $NF }'`
+			gem_install "$_gem"
+		elif [[ "$line" == "deb:"* ]]; then
+			_deb=`echo "$line" | awk -F':' '{ print $NF }'`
+			pkg_install "$_deb"
+		else
+			echo -n "Installing module $line..."
+			while read -r files; do
+				directory=`echo "${files%/*}"`
+				file=`echo "${files##*/}"`
+				pushd $HOME/genesis6 > /dev/null
+				curl -s "$URL/modules/$line.gem" -o "$line.gem"
+				mv "$line.gem" modules/
+				mkdir -p $directory
+				curl -s $URL/$files -o $file
+				mv "$file" "$directory"
+				popd > /dev/null
+			done< <(awk "/BEGIN_$line/{flag=1;next}/END_$line/{flag=0}flag" master.list)
+			echo -e "\b\b\b [done]"
+		fi
+	done< <(cat master.list | sed '/^\s*$/d')
+
+	rm master.list
+	pinfo "Finished installing modules"
+}
+
+function install_core
+{
+	mkdir -p $HOME/genesis6/modules
+	mkdir -p $HOME/genesis6/.core/gems
+	mkdir -p $HOME/genesis6/.core/icons
+
+	pinfo "Preconfiguring wine and multi-arch"
+	multiarch=`wine cmd /c "exit" 2>&1 | grep '"dpkg --add-architecture i386"'`
+	_wine32=`wine cmd /c "exit" 2>&1 | grep '"apt-get install wine32"'`
+
+	if [[ "$multiarch" != "" ]]; then
+		pinstall "Adding multi-arch i386"
+		sudo dpkg --add-architecture i386
+		sudo apt-get update
+	fi
+
+	if [[ "$_wine32" != "" ]]; then
+		pinstall "wine32 not installed. Installing\n"
+		sudo apt-get install wine32
+	else
+		pinfo "wine32 already installed"
+	fi
+	
+	pinfo "Setting up curl"
+	pkg_install "curl"
+
+	echo -n "Downloading Genesis core..."
+	pushd $HOME/genesis6 > /dev/null
+	curl -s $URL/genesis -o genesis
+	curl -s $URL/gpm -o gpm
+	curl -s $URL/gecko.png -o gecko.png
+	curl -s $URL/mkmod -o mkmod
+	curl -s $URL/bgem -o bgem
+	curl -s $URL/.core/gems/internals.gem -o internals.gem
+	mv internals.gem .core/gems/
+	curl -s $URL/.core/icons/icon1 -o icon1
+	curl -s $URL/.core/icons/icon2 -o icon2
+	curl -s $URL/.core/icons/icon3 -o icon3
+	curl -s $URL/.core/icons/icon4 -o icon4
+	curl -s $URL/.core/icons/icon5 -o icon5
+
+	for i in `seq 1 5`; do
+		mv "icon$i" .core/icons/
+	done
+
+	touch .history
+	curl -s $URL/README -o README
+	popd > /dev/null
+	
+	echo -e "\b\b\b [done]"
+
+	install_all
+
+	exec_path="/usr/local/bin"
+	if [ ! -f "$exec_path/genesis" ]; then
+		pinfo "Creating exec script: genesis"
+		echo '#!/bin/bash' > $exec_path/genesis
+		echo >> $exec_path/genesis
+		echo 'pushd $HOME/genesis6 > /dev/null' >> $exec_path/genesis
+		echo 'ruby genesis "$@"' >> $exec_path/genesis
+		echo 'popd > /dev/null' >> $exec_path/genesis
+
+		sudo chmod +x $exec_path/genesis
+	fi
+	
+	if [ ! -f "$exec_path/gpm" ]; then
+		pinfo "Creating exec script: gpm"
+		echo '#!/bin/bash' > $exec_path/gpm
+		echo >> $exec_path/gpm
+		echo 'pushd $HOME/genesis6 > /dev/null' >> $exec_path/gpm
+		echo 'bash gpm "$@"' >> $exec_path/gpm
+		echo 'popd > /dev/null' >> $exec_path/gpm
+
+		chmod +x $exec_path/gpm
+	fi
+
+	dskpath="/usr/share/applications"
+	if [ ! -f "$dskpath/genesis.desktop" ]; then
+		pinfo "Creating launcher"
+		echo "[Desktop ENTRY]" > $dskpath/genesis.desktop
+		echo "Name=Genesis" >> $dskpath/genesis.desktop
+		echo "Encoding=UTF-8" >> $dskpath/genesis.desktop
+		echo "Exec=ruby $HOME/genesis6/genesis -s; \${SHELL:-bash}\"" >> $dskpath/genesis.desktop
+		echo "StartupNotify=false" >> $dskpath/genesis.desktop
+		echo "Terminal=true" >> $dskpath/genesis.desktop
+		echo "Type=Application" >> $dskpath/genesis.desktop
+	fi
+}
+
+install_core
