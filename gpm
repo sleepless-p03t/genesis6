@@ -96,7 +96,7 @@ function install_all
 	pinfo "Finished installing modules"
 }
 
-#install individual module
+#install individual module (if not already installed)
 function install_module
 {
 	local mod="$1"
@@ -221,19 +221,26 @@ function install_core
 	fi
 }
 
+############################################################################
+
+# Arg parse and exec
+
 argc=$#
 
+# help
 if [ -z $1 ] || [[ "$1" == "help" ]]; then
 	echo "usage: "
 	echo -e "\tgpm install [--core | --all]"
 	echo "or"
 	echo -e "\tgpm add [--src] <module>"
 	echo "or"
+	echo -e "\tgpm add all"
 	echo -e "\tgpm help"
 	
 	exit 1
 fi
 
+# install
 if [[ "$1" == "install" ]]; then
 
 	if [ $argc -gt 2 ]; then
@@ -250,11 +257,14 @@ if [[ "$1" == "install" ]]; then
 		perr "Unknown option $2"
 		exit 1
 	fi
+# add module
 elif [[ "$1" == "add" ]]; then
 	if [ $argc -eq 2 ]; then
 		if [[ "$2" == "--src" ]]; then
 			perr "missing module name"
 			exit 1
+		elif [[ "$2" == "all" ]]; then
+			install_all
 		else
 			install_module "$2" ""
 		fi
