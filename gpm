@@ -239,6 +239,7 @@ if [ -z $1 ] || [[ "$1" == "help" ]]; then
 	echo -e "\tgpm add [--src] <module>"
 	echo "or"
 	echo -e "\tgpm add all"
+	echo "or"
 	echo -e "\tgpm help"
 	
 	exit 1
