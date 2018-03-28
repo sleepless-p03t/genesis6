@@ -20,21 +20,24 @@ You can download the entire repository if you want, but there's another option:
 	b) If you want to install everything:
 		bash gpm install all
 
-3) gpm acts as a manager for genesis
+GPM:
 
-	a) If you want to install an available module:
-		gpm add [<module> | all]
-	
-	b) If you want to remove a module:
-		gpm remove [<module> | all]
-	
-	c) If you want to uninstall genesis**:
-		gpm uninstall
+gpm acts as a manager for genesis
 
-4) Watch for updates to gpm, I may add more functionality in the future
+Usage:
+	gpm install [core | all]						Installs genesis core | Installs core and all available modules
+	gpm uninstall									Removes genesis entirely
+	
+	gpm add [<module> | all]						Adds module <module> | Adds all modules
+	gpm remove [<module> | all]						Removes module <module> | Removes all modules
+
+	gpm list [all | installed | available]			Lists all modules | Lists installed modules | Lists available modules
+
+	gpm help										Help guide
+
+Watch for updates to gpm, I may add more functionality in the future
 
 *gpm creates an exec script for itself and can be run directly as gpm instead of bash gpm
-**gpm uninstall removes genesis, as well as the exec scripts for genesis and gpm
 			
 PURPOSE:
 
