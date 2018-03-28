@@ -445,20 +445,20 @@ elif [[ "$1" == "list" ]]; then
 	fi
 # uninstall genesis
 elif [[ "$1" == "uninstall" ]]; then
-	pushd $HOME > /dev/null
-	if [ -d genesis6 ]; then
+	if [ -d $HOME/genesis6 ]; then
 		pinfo "Removing genesis"
-		rm -rf genesis6
+		rm -rf $HOME/genesis6
 	else
 		perr "Genesis not installed or already removed"
 	fi
-	popd > /dev/null
+
 	if [ -f "/usr/local/bin/genesis" ] && [ -f "/usr/local/bin/gpm" ]; then
 		pinfo "Removing exec scripts"
 		rm /usr/local/bin/genesis
 		rm /usr/local/bin/gpm
 		pinfo "Exec scripts removed"
 	fi
+	pinfo "Genesis uninstalled successfully"
 # unknown command
 elif [[ "$1" != "help" ]]; then
 	perr "Unknown command $1"
