@@ -356,6 +356,8 @@ trap cleanup EXIT
 
 argc=$#
 
+# gpm list available hangs
+
 # help
 if [ -z $1 ] || [[ "$1" == "help" ]]; then
 	echo "usage: "
