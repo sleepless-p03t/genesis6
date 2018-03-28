@@ -122,15 +122,15 @@ function list_available_modules
 	curl -s $URL/master.list -o master.list
 	pinfo "Available modules:"
 	while read -r line; do
-		pushd $HOME/genesis6/modules > /dev/null
 		if [[ "$line" == "BEGIN_"* ]]; then
 			break
 		elif [[ "$line" != "gem:"* ]] && [[ "$line" != "deb:"* ]]; then
+			pushd $HOME/genesis6/modules > /dev/null
 			if [ ! -f "$line.gem" ]; then
 				pinstall "$line"
 			fi
+			popd > /dev/null
 		fi
-		popd > /dev/null
 	done< <(cat master.list | sed '/^\s*$/d')
 	rm master.list
 }
