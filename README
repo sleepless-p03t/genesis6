@@ -25,15 +25,15 @@ GPM:
 gpm acts as a manager for genesis
 
 Usage:
-	gpm install [core | all]						Installs genesis core | Installs core and all available modules
-	gpm uninstall									Removes genesis entirely
-	
-	gpm add [<module> | all]						Adds module <module> | Adds all modules
-	gpm remove [<module> | all]						Removes module <module> | Removes all modules
+	gpm install [core | all]					Installs genesis core | Installs core and all available modules
+	gpm uninstall								Removes genesis entirely
 
-	gpm list [all | installed | available]			Lists all modules | Lists installed modules | Lists available modules
+	gpm add [<module> | all]					Adds module <module> | Adds all modules
+	gpm remove [<module> | all]					Removes module <module> | Removes all modules
 
-	gpm help										Help guide
+	gpm list [all | installed | available]		Lists all modules | Lists installed modules | Lists available modules
+
+	gpm help									Help guide
 
 Watch for updates to gpm, I may add more functionality in the future
 
