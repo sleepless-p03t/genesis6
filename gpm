@@ -120,14 +120,18 @@ function list_available_modules
 {
 	web_error "$URL/master.list"
 	curl -s $URL/master.list -o master.list
+	pinfo "Available modules"
+	pushd $HOME/genesis6/modules > /dev/null
 	while read -r line; do
 		if [[ "$line" == "BEGIN_"* ]]; then
 			break
 		elif [[ "$line" != "gem:"* ]] && [[ "$line" != "deb:"* ]]; then
-			pushd $HOME/
+			if [ ! -f "$line.gem" ]; then
+				pinstall "$line"
+			fi
 		fi
-	done
-
+	done< <(cat master.list | sed '/^\s*$/d')
+	popd > /dev/null
 	rm master.list
 }
 
