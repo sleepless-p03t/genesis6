@@ -31,6 +31,8 @@ Usage:
 	gpm add [<module> | all]					Adds module <module> | Adds all modules
 	gpm remove [<module> | all]					Removes module <module> | Removes all modules
 
+	gpm update									Updade genesis and installed modules
+
 	gpm list [all | installed | available]		Lists all modules | Lists installed modules | Lists available modules
 
 	gpm help									Help guide
