@@ -541,13 +541,6 @@ elif [[ "$1" == "uninstall" ]]; then
 	else
 		perr "Genesis not installed or already removed"
 	fi
-
-	if [ -f "/usr/local/bin/genesis" ] && [ -f "/usr/local/bin/gpm" ]; then
-		pinfo "Removing exec scripts"
-		rm /usr/local/bin/genesis
-		rm /usr/local/bin/gpm
-		pinfo "Exec scripts removed"
-	fi
 # unknown command
 elif [[ "$1" != "help" ]]; then
 	perr "Unknown command $1"
