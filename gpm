@@ -335,7 +335,7 @@ function install_core
 		echo >> $exec_path/genesis
 		echo 'pushd $HOME/genesis6 > /dev/null' >> $exec_path/genesis
 		echo 'ruby genesis "$@"' >> $exec_path/genesis
-		echo 'popd > /dev/null' >> $exec_path/genesis
+		echo 'popd 2&>1 > /dev/null' >> $exec_path/genesis
 
 		sudo chmod +x $exec_path/genesis
 	fi
@@ -346,7 +346,7 @@ function install_core
 		echo >> $exec_path/gpm
 		echo 'pushd $HOME/genesis6 > /dev/null' >> $exec_path/gpm
 		echo 'bash gpm "$@"' >> $exec_path/gpm
-		echo 'popd > /dev/null' >> $exec_path/gpm
+		echo 'popd 2&>1 > /dev/null' >> $exec_path/gpm
 
 		chmod +x $exec_path/gpm
 	fi
