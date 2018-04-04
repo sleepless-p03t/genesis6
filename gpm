@@ -332,6 +332,9 @@ function install_core
 		echo '#!/bin/bash' > $exec_path/genesis
 		echo >> $exec_path/genesis
 		echo 'pushd $HOME/genesis6 > /dev/null' >> $exec_path/genesis
+		echo 'if [ ! -f .history ]; then' >> $exec_path/genesis
+		echo -e "\ttouch .history" >> $exec_path/genesis
+		echo 'fi' >> $exec_path/genesis
 		echo 'ruby genesis "$@"' >> $exec_path/genesis
 		echo 'popd > /dev/null' >> $exec_path/genesis
 
