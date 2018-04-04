@@ -295,8 +295,6 @@ function install_core
 	pushd $HOME/genesis6 > /dev/null
 	web_error "$URL/genesis"
 	curl -s $URL/genesis -o genesis
-	web_error "$URL/gpm"
-	curl -s $URL/gpm -o gpm
 	web_error "$URL/gecko.png"
 	curl -s $URL/gecko.png -o gecko.png
 	web_error "$URL/mkmod"
@@ -341,14 +339,25 @@ function install_core
 	fi
 	
 	if [ ! -f "$exec_path/gpm" ]; then
-		pinfo "Creating exec script: gpm"
-		echo '#!/bin/bash' > $exec_path/gpm
-		echo >> $exec_path/gpm
-		echo 'pushd $HOME/genesis6 > /dev/null' >> $exec_path/gpm
-		echo 'bash gpm "$@"' >> $exec_path/gpm
-		echo 'popd > /dev/null' >> $exec_path/gpm
+		pinfo "Getting manager script: gpm"
+		web_error "$URL/gpm"
+		curl -s $URL/gpm -o gpm
+		if [[ $(pwd) != $HOME ]]; then
+			if [ -f $HOME/gpm ]; then
+				rm $HOME/gpm
+			fi
+			mv gpm $HOME/
+		fi
 
-		chmod +x $exec_path/gpm
+		if [ -f $HOME/.bash_aliases ]; then
+			if ! grep -Fxq '^alias gpm=' $HOME/.bash_aliases; then
+				echo 'alias gpm="bash \"$HOME/gpm\""' >> $HOME/.bash_aliases
+			fi
+		else
+			pinfo "Adding gpm to new .bash_aliases file"
+			echo 'alias gpm="bash \"$HOME/gpm\""' > $HOME/.bash_aliases
+		fi
+		source $HOME/.bash_aliases
 	fi
 }
 
@@ -540,6 +549,32 @@ elif [[ "$1" == "uninstall" ]]; then
 		pinfo "Genesis uninstalled successfully"
 	else
 		perr "Genesis not installed or already removed"
+	fi
+
+	if [ -f /usr/local/bin/genesis ]; then
+		pinfo "Removing genesis exec script"
+		rm /usr/local/bin/genesis
+	fi
+	
+	if [ -f $HOME/gpm ]; then
+		read -r -p "Do you want to remove gpm as well? [Y/n]: " -n 1
+		echo
+		if [[ $REPLY =~ ^[Yy]$ ]]; then
+			pinfo "Removing gpm"
+			rm $HOME/gpm
+			if [ -f $HOME/.bash_aliases ]; then
+				pinfo "Removing alias gpm"
+				if grep -Fxq '^alias gpm=' $HOME/.bash_aliases; then
+					if [[ $(grep -v '^alias gpm' | nl | awk '{ print $1 }') != "" ]]; then
+						sed -i '/^alias gpm=/d' $HOME/.bash_aliases
+					else
+						pinfo "No other aliases found in .bash_aliases"
+						pinfo "Removing .bash_aliases file"
+						rm $HOME/.bash_aliases
+					fi
+				fi
+			fi
+		fi
 	fi
 # unknown command
 elif [[ "$1" != "help" ]]; then
