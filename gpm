@@ -577,6 +577,7 @@ elif [[ "$1" == "uninstall" ]]; then
 					fi
 				fi
 			fi
+			source $HOME/.bash_aliases
 		fi
 	fi
 # unknown command
