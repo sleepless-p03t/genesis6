@@ -2,6 +2,7 @@
 
 URL="https://raw.githubusercontent.com/sleepless-p03t/genesis6/master/"
 
+# cleanup directory stack at exit 
 function cleanup
 {
 	while (( $? == 0 )); do
@@ -290,6 +291,10 @@ function install_core
 	
 	pinfo "Setting up curl"
 	pkg_install "curl"
+	
+	pinfo "Installing necessary gems"
+	gem_install "colorize"
+	gem_install "rb-readline"
 
 	echo -en "\e[0;37mDownloading Genesis core..."
 	pushd $HOME/genesis6 > /dev/null
