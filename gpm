@@ -2,6 +2,7 @@
 
 URL="https://raw.githubusercontent.com/sleepless-p03t/genesis6/master/"
 
+# cleanup directory stack at exit 
 function cleanup
 {
 	while (( $? == 0 )); do
