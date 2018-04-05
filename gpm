@@ -353,7 +353,7 @@ function install_core
 	if [ ! -f "$HOME/.gen_ext/gpm" ]; then
 		pinfo "Getting manager script: gpm"
 		web_error "$URL/gpm"
-		curl -s $URL/.gen_ext/gpm -o gpm
+		curl -s $URL/gpm -o gpm
 		if [[ $(pwd) != $HOME/.gen_ext ]]; then
 			if [ -f $HOME/.gen_ext/gpm ]; then
 				rm $HOME/.gen_ext/gpm
