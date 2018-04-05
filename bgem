@@ -3,44 +3,6 @@
 GEMDIR=$1
 PARENT=`pwd`
 
-function pack
-{
-	sed -i '/^\s*$/d' readme
-	tac readme > .rt
-	echo -en "\n" >> .rt
-	tac .rt > readme
-	rm .rt
-
-	local _gem=$1
-	cat $_gem.gem readme > temp
-	mv temp $_gem.gmd
-}
-
-function unpack
-{
-	local _gem=$1
-	
-	awk '/__README__/,/__DEB_DEPS__/' $_gem.gmd | grep -v '__README__\|__DEB_DEPS__' > $_gem.readme
-	awk '/__DEB_DEPS__/,__GEM_DEPS__/' $_gem.gmd | grep -v '__DEB_DEPS__\|__GEM_DEPS__' > $_gem.dlist
-	sed -n -e '1,/__GEM_DEPS__/!p' $_gem.gmd > $_gem.glist
-
-	sed -n -i '/__README__/q;p' $_gem.gmd
-	truncate -s -1 $_gem.gmd
-
-	while read -r line; do
-		sudo apt-get install $line
-	done< <(cat $_gem.dlist)
-
-	while read -r line; do
-		sudo gem install $line
-	done< <($_gem.glist)
-
-	rm $_gem.dlist
-	rm $_gem.glist
-
-	mv $_gem $PARENT/modules/$_gem.gem
-}
-
 function del_mod_src
 {
 	read -r -p "Would you like to delete this module's source directory? [Y/n] " rsp
@@ -74,21 +36,8 @@ else
 	GEM=0
 fi
 
-if [ -f readme ]; then
-	README=1
-else
-	README=0
-fi
-
-_ERROR=0
-
 if [[ $SPEC -eq 0 ]]; then
 	echo "Missing gemspec"
-	_ERROR=1
-fi
-
-if [[ $README -eq 0 ]]; then
-	echo "Missing readme"
 	_ERROR=1
 fi
 
@@ -109,12 +58,10 @@ if [[ $? -ne 0 ]]; then
 else
 	gem=`ls *.gem | awk -F'-' '{ print $1 }'`
 	mv *.gem $gem.gem
-	pack $gem
 	if [ -f $PARENT/modules/$gem.gem ]; then
 		read -r -p "Module exists. Would you like to replace it? [Y/n] " response
 		case "$response" in
 			[yY][eE][sS]|[yY])
-				unpack $gem
 				del_mod_src
 				exit 0
 				;;
@@ -124,7 +71,6 @@ else
 				;;
 		esac
 	else
-		unpack $gem
 		echo "Module $gem added to Genesis"
 		del_mod_src
 	fi

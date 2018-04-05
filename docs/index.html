@@ -6,13 +6,23 @@
   </head>
 
   <body>
-    <table class="nav-bar">
-        <tr>
-        <td><button class="nav-button" onclick="showContent('Home')">Home</button></td>
-        <td><button class="nav-button" onclick="showContent('Modules')">Modules</button></td>
-        <td><button class="nav-button" onclick="showContent('Development')">Development</button></td>
-      </tr>
-    </table>
-    <a download="gpm" href="gpm"> download</a>
+    <div class="topnav" id="myTopnav">
+      <a href="#" class="active">Home</a>
+      <a href="usage.html">Usage</a>
+      <a href="tutorials.html">Tutorials</a>
+      <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a>
+    </div>
+    <script src="js/script.js"></script>
+
+    <h1>Genesis</h1>
+    <h3>Windows malware development made easy</h3>
+    <p>
+      Genesis is modeled after Metasploit by Rapid7 and The Social Engineering Toolkit by TrustedSec. At its core, it is a CLI with many features: <br/>
+    </p>
+    <ul>
+      <li>Custom tab completion</li>
+        <li>Modular development</li>
+        <li>Builtin functionality</li>
+    </ul>
   </body>
 </html>
