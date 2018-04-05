@@ -264,7 +264,6 @@ function remove_module
 	pinfo "Removed module successfully"
 }
 
-# need to add a little bit here
 #install the core of genesis
 function install_core
 {
@@ -291,10 +290,6 @@ function install_core
 	
 	pinfo "Setting up curl"
 	pkg_install "curl"
-
-	pinfo "Setting up required gems"
-	gem_install "colorize"
-	gem_install "rb-readline"
 
 	echo -en "\e[0;37mDownloading Genesis core..."
 	pushd $HOME/genesis6 > /dev/null
@@ -345,75 +340,27 @@ function install_core
 
 		sudo chmod +x $exec_path/genesis
 	fi
-
-	if [ ! -d $HOME/.gen_ext ]; then
-		mkdir -p $HOME/.gen_ext
-	fi
 	
-	if [ ! -f "$HOME/.gen_ext/gpm" ]; then
+	if [ ! -f "$exec_path/gpm" ]; then
 		pinfo "Getting manager script: gpm"
 		web_error "$URL/gpm"
 		curl -s $URL/gpm -o gpm
-		if [[ $(pwd) != $HOME/.gen_ext ]]; then
-			if [ -f $HOME/.gen_ext/gpm ]; then
-				rm $HOME/.gen_ext/gpm
+		if [[ $(pwd) != $HOME ]]; then
+			if [ -f $HOME/gpm ]; then
+				rm $HOME/gpm
 			fi
-			mv gpm $HOME/.gen_ext/
+			mv gpm $HOME/
 		fi
 
 		if [ -f $HOME/.bash_aliases ]; then
 			if ! grep -Fxq '^alias gpm=' $HOME/.bash_aliases; then
-				echo 'alias gpm="bash \"$HOME/.gen_ext/gpm\""' >> $HOME/.bash_aliases
+				echo 'alias gpm="bash \"$HOME/gpm\""' >> $HOME/.bash_aliases
 			fi
 		else
 			pinfo "Adding gpm to new .bash_aliases file"
-			echo 'alias gpm="bash \"$HOME/.gen_ext/gpm\""' > $HOME/.bash_aliases
+			echo 'alias gpm="bash \"$HOME/gpm\""' > $HOME/.bash_aliases
 		fi
-	fi
-
-	if [ ! -f $HOME/.gen_ext/gpm_comp ]; then
-		cat > $HOME/.gen_ext/gpm_comp <<-'EOF'
-			_gpmcomplete() {
-				COMPREPLY=()
-
-				local margs=("help" "install" "uninstall" "add" "remove" "update" "list")
-
-				declare -A OPTIONS
-				OPTIONS[install]="core all"
-				OPTIONS[add]="all"
-				OPTIONS[remove]="all"
-				OPTIONS[list]="all available installed"
-
-				local cur=${COMP_WORDS[COMP_CWORD]}
-
-				if [ ${OPTIONS[$3]+1} ]; then
-					COMPREPLY=( `compgen -W "${OPTIONS[$3]}" -- $cur` )
-				elif [[ "${OPTIONS[*]}" == *"$3"* ]]; then
-					if [[ "$3" != "all" ]] && [[ "$3" != "core" ]] && [[ "$3" != "available" ]] && [[ "$3" != "installed" ]]; then
-						COMPREPLY=( `compgen -W "${OPTIONS[*]}" -- $cur` )
-					else
-						COMPREPLY=()
-					fi
-				else
-					if [[ "$3" != "help" ]] && [[ "$3" != "update" ]] && [[ "$3" != "uninstall" ]]; then
-						COMPREPLY=( `compgen -W "${margs[*]}" -- $cur` )
-					else
-						COMPREPLY=()
-					fi
-				fi
-			}
-
-			complete -F _gpmcomplete gpm
-		EOF
-		if ! grep -Fxq 'source $HOME/.gen_ext/gpm_comp' $HOME/.bashrc; then
-			echo '# begin gpm_comp' >> $HOME/.bashrc
-			echo 'if [ -f $HOME/.gen_ext/gpm_comp ]; then' >> $HOME/.bashrc
-			echo -e "\tsource \$HOME/.gen_ext/gpm_comp" >> $HOME/.bashrc
-			echo 'fi' >> $HOME/.bashrc
-			echo '# end gpm_comp' >> $HOME.bashrc
-		fi
-		source $HOME/.bashrc
-		source $HOME/.gen_ext/gpm_comp
+		source $HOME/.bash_aliases
 	fi
 }
 
@@ -612,11 +559,12 @@ elif [[ "$1" == "uninstall" ]]; then
 		rm /usr/local/bin/genesis
 	fi
 	
-	if [ -f $HOME/.gen_ext/gpm ]; then
+	if [ -f $HOME/gpm ]; then
 		read -r -p "Do you want to remove gpm as well? [Y/n]: " -n 1
 		echo
 		if [[ $REPLY =~ ^[Yy]$ ]]; then
 			pinfo "Removing gpm"
+			rm $HOME/gpm
 			if [ -f $HOME/.bash_aliases ]; then
 				pinfo "Removing alias gpm"
 				if grep -Fxq '^alias gpm=' $HOME/.bash_aliases; then
@@ -629,12 +577,7 @@ elif [[ "$1" == "uninstall" ]]; then
 					fi
 				fi
 			fi
-			if [ -d $HOME/.gen_ext/ ]; then
-				rm -rf $HOME/.gen_ext
-			fi
-			if grep -Fxq "source \$HOME/.gen_ext/gpm_comp" $HOME/.bashrc; then
-				sed -i '/# begin gpm_comp/,/# end gpm_comp/d' $HOME/.bashrc
-			fi
+			source $HOME/.bash_aliases
 		fi
 	fi
 # unknown command
