@@ -1,0 +1,7 @@
+Title:Genesis
+Header:Genesis
+Sub:Windows malware made easy
+Text:Genesis is modeled after Metasploit developed by Rapid7 and The Social Engineering Toolkit by TrustedSec. It is a CLI with many features:
+List:Custom tab completion
+List:Modular development
+List:Builtin functionality

@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>Genesis - Tutorials</title>
+    <link rel="icon" href="imgs/gecko.png" />
+    <link rel="stylesheet" type="text/css" href="css/sunburst.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+  </head>
+
+  <body>
+
+    <div class="content">
+      <h1>Tutorial</h1>
+      <p style="color: white;text-align: center;">
+        Here is an example module script
+      </p>
+    </div>
+    <pre class="prettyprint linenums">
+# module name
+def mname
+  "example"
+end
+
+# module commands, generate pre-defined
+def cmds
+  [ "generate", "example" ]
+end
+
+# custom variables to be set, used by the tab completer
+# retrievable via vhash passed to generate function
+def vars
+  [ "example", "file", "whatever" ]
+end
+
+# use built-in extensions
+def use
+  [ "msfvenom" ]
+end
+
+# Defined generation function
+def generate(vhash)
+    # vhash: a hash which contains variables and their values
+    # do what you want here
+end
+
+# Anything that isn't a class, module, or function is ignored</pre>
+  </body>
+</html>
