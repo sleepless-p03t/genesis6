@@ -341,7 +341,7 @@ function install_core
 		sudo chmod +x $exec_path/genesis
 	fi
 	
-	if [ ! -f "$exec_path/gpm" ]; then
+	if [ ! -f "$HOME/gpm" ]; then
 		pinfo "Getting manager script: gpm"
 		web_error "$URL/gpm"
 		curl -s $URL/gpm -o gpm
