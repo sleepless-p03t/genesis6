@@ -601,7 +601,7 @@ elif [[ "$1" == "uninstall" ]]; then
 		pinfo "Removing genesis exec script"
 		rm /usr/local/bin/genesis
 	fi
-	
+# UUUUUUHHHHHHHHH	
 	if [ -f $HOME/gpm ]; then
 		read -r -p "Do you want to remove gpm as well? [Y/n]: " -n 1
 		echo
