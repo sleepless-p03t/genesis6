@@ -616,13 +616,8 @@ elif [[ "$1" == "uninstall" ]]; then
 			fi
 
 			if [ -f $HOME/.bash_aliases ]; then
-				pinfo "Removing alias gpm"
-				if grep -Fxq '^alias gpm=' $HOME/.bash_aliases; then
-					sed -i '/^alias gpm=/d' $HOME/.bash_aliases
-				fi
-				if grep -Fxq '^source \$HOME/gpm_complete' $HOME/.bash_aliases; then
-					sed -i '/^source \$HOME/d' $HOME/.bash_aliases
-				fi
+				grep -v 'gpm' $HOME/.bash_aliases > $HOME/.temp
+				mv $HOME/.temp $HOME/.bash_aliases
 			fi
 			complete -r gpm
 			source $HOME/.bash_aliases
