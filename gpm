@@ -618,9 +618,9 @@ elif [[ "$1" == "uninstall" ]]; then
 			if [ -f $HOME/.bash_aliases ]; then
 				pinfo "Removing alias gpm"
 				if grep -Fxq '^alias gpm=' $HOME/.bash_aliases; then
-					if [[ $(grep -v '^alias gpm\|source $HOME/gpm_complete' | nl | awk '{ print $1 }') != "" ]]; then
+					if [[ $(grep -v '^alias gpm\|^source $HOME/gpm_complete' | nl | awk '{ print $1 }') != "" ]]; then
 						sed -i '/^alias gpm=/d' $HOME/.bash_aliases
-						sed -i '/^source \$HOME\/gpm_complete/d' $HOME/.bash_aliases
+						sed -i '/^source \$HOME/d' $HOME/.bash_aliases
 					else
 						pinfo "No other aliases found in .bash_aliases"
 						pinfo "Removing .bash_aliases file"
