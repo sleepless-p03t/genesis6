@@ -356,55 +356,55 @@ function install_core
 			fi
 			mv gpm $HOME/
 		fi
+	fi
 
-		echo '_gpmcomplete() {' >> $HOME/gpm_complete
-		echo 'COMPREPLY=()' >> $HOME/gpm_complete
-		echo '' >> $HOME/gpm_complete
-		echo 'local margs=("help" "install" "uninstall" "add" "remove" "update" "list")' >> $HOME/gpm_complete
-		echo '' >> $HOME/gpm_complete
-		echo 'declare -A OPTIONS' >> $HOME/gpm_complete
-		echo 'OPTIONS[install]="core all"' >> $HOME/gpm_complete
-		echo 'OPTIONS[add]="all"' >> $HOME/gpm_complete
-		echo 'OPTIONS[remove]="all"' >> $HOME/gpm_complete
-		echo 'OPTIONS[list]="all available installed"' >> $HOME/gpm_complete
-		echo '' >> $HOME/gpm_complete
-		echo 'local cur=${COMP_WORDS[COMP_CWORD]}' >> $HOME/gpm_complete
-		echo '' >> $HOME/gpm_complete
-		echo 'if [ ${OPTIONS[$3]+1} ]; then' >> $HOME/gpm_complete
-		echo 'COMPREPLY=( `compgen -W "${OPTIONS[$3]}" -- $cur` )' >> $HOME/gpm_complete
-		echo 'elif [[ "${OPTIONS[*]}" == *"$3"* ]]; then' >> $HOME/gpm_complete
-		echo 'if [[ "$3" != "all" ]] && [[ "$3" != "core" ]] && [[ "$3" != "available" ]] && [[ "$3" != "installed" ]]; then' >> $HOME/gpm_complete
-		echo 'COMPREPLY=( `compgen -W "${OPTIONS[*]}" -- $cur` )' >> $HOME/gpm_complete
-		echo 'else' >> $HOME/gpm_complete
-		echo 'COMPREPLY=()' >> $HOME/gpm_complete
-		echo 'fi' >> $HOME/gpm_complete
-		echo 'else' >> $HOME/gpm_complete
-		echo 'if [[ "$3" != "help" ]] && [[ "$3" != "update" ]] && [[ "$3" != "uninstall" ]]; then' >> $HOME/gpm_complete
-		echo 'COMPREPLY=( `compgen -W "${margs[*]}" -- $cur` )' >> $HOME/gpm_complete
-		echo 'else' >> $HOME/gpm_complete
-		echo 'COMPREPLY=()' >> $HOME/gpm_complete
-		echo 'fi' >> $HOME/gpm_complete
-		echo 'fi' >> $HOME/gpm_complete
-		echo '}' >> $HOME/gpm_complete
-		echo 'complete -F _gpmcomplete gpm' >> $HOME/gpm_complete
+	echo '_gpmcomplete() {' > $HOME/gpm_complete
+	echo 'COMPREPLY=()' >> $HOME/gpm_complete
+	echo '' >> $HOME/gpm_complete
+	echo 'local margs=("help" "install" "uninstall" "add" "remove" "update" "list")' >> $HOME/gpm_complete
+	echo '' >> $HOME/gpm_complete
+	echo 'declare -A OPTIONS' >> $HOME/gpm_complete
+	echo 'OPTIONS[install]="core all"' >> $HOME/gpm_complete
+	echo 'OPTIONS[add]="all"' >> $HOME/gpm_complete
+	echo 'OPTIONS[remove]="all"' >> $HOME/gpm_complete
+	echo 'OPTIONS[list]="all available installed"' >> $HOME/gpm_complete
+	echo '' >> $HOME/gpm_complete
+	echo 'local cur=${COMP_WORDS[COMP_CWORD]}' >> $HOME/gpm_complete
+	echo '' >> $HOME/gpm_complete
+	echo 'if [ ${OPTIONS[$3]+1} ]; then' >> $HOME/gpm_complete
+	echo 'COMPREPLY=( `compgen -W "${OPTIONS[$3]}" -- $cur` )' >> $HOME/gpm_complete
+	echo 'elif [[ "${OPTIONS[*]}" == *"$3"* ]]; then' >> $HOME/gpm_complete
+	echo 'if [[ "$3" != "all" ]] && [[ "$3" != "core" ]] && [[ "$3" != "available" ]] && [[ "$3" != "installed" ]]; then' >> $HOME/gpm_complete
+	echo 'COMPREPLY=( `compgen -W "${OPTIONS[*]}" -- $cur` )' >> $HOME/gpm_complete
+	echo 'else' >> $HOME/gpm_complete
+	echo 'COMPREPLY=()' >> $HOME/gpm_complete
+	echo 'fi' >> $HOME/gpm_complete
+	echo 'else' >> $HOME/gpm_complete
+	echo 'if [[ "$3" != "help" ]] && [[ "$3" != "update" ]] && [[ "$3" != "uninstall" ]]; then' >> $HOME/gpm_complete
+	echo 'COMPREPLY=( `compgen -W "${margs[*]}" -- $cur` )' >> $HOME/gpm_complete
+	echo 'else' >> $HOME/gpm_complete
+	echo 'COMPREPLY=()' >> $HOME/gpm_complete
+	echo 'fi' >> $HOME/gpm_complete
+	echo 'fi' >> $HOME/gpm_complete
+	echo '}' >> $HOME/gpm_complete
+	echo 'complete -F _gpmcomplete gpm' >> $HOME/gpm_complete
 		
-		if [ -f $HOME/.bash_aliases ]; then
-			if ! grep -Fxq '^alias gpm=' $HOME/.bash_aliases; then
-				echo 'alias gpm="bash \"$HOME/gpm\""' >> $HOME/.bash_aliases
-			fi
-
-			if ! grep -Fxq '^source $HOME/gpm_complete' $HOME/.bash_aliases; then
-				echo 'source $HOME/gpm_complete' >> $HOME/.bash_aliases
-			fi
-		else
-			pinfo "Adding gpm to new .bash_aliases file"
-			echo 'alias gpm="bash \"$HOME/gpm\""' > $HOME/.bash_aliases
-			echo 'source $HOME/gpm_complete' >> $HOME/.bash_aliases
+	if [ -f $HOME/.bash_aliases ]; then
+		if ! grep -Fxq '^alias gpm=' $HOME/.bash_aliases; then
+			echo 'alias gpm="bash \"$HOME/gpm\""' >> $HOME/.bash_aliases
 		fi
 
-		
-		source $HOME/.bash_aliases
+		if ! grep -Fxq '^source $HOME/gpm_complete' $HOME/.bash_aliases; then
+			echo 'source $HOME/gpm_complete' >> $HOME/.bash_aliases
+		fi
+	else
+		pinfo "Adding gpm to new .bash_aliases file"
+		echo 'alias gpm="bash \"$HOME/gpm\""' > $HOME/.bash_aliases
+		echo 'source $HOME/gpm_complete' >> $HOME/.bash_aliases
 	fi
+
+		
+	source $HOME/.bash_aliases
 }
 
 function update
