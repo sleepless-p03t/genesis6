@@ -9,7 +9,6 @@ function cleanup
 		popd 2&>1 > /dev/null
 	done
 
-	exec bash -c "source ~/.bashrc"
 }
 
 # print info message
