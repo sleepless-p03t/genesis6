@@ -2,12 +2,14 @@
 
 URL="https://raw.githubusercontent.com/sleepless-p03t/genesis6/master/"
 
-# cleanup directory stack at exit 
+# cleanup directory stack at exit and exec bash to register bashrc changes 
 function cleanup
 {
 	while (( $? == 0 )); do
 		popd 2&>1 > /dev/null
 	done
+
+	exec bash
 }
 
 # print info message
@@ -402,9 +404,8 @@ function install_core
 		echo 'alias gpm="bash \"$HOME/gpm\""' > $HOME/.bash_aliases
 		echo 'source $HOME/gpm_complete' >> $HOME/.bash_aliases
 	fi
-
-		
-	source $HOME/.bash_aliases
+	cat $HOME/.bash_aliases | sort -u > $HOME/.temp
+	mv $HOME/.temp $HOME/.bash_aliases
 }
 
 function update
@@ -601,7 +602,7 @@ elif [[ "$1" == "uninstall" ]]; then
 		pinfo "Removing genesis exec script"
 		rm /usr/local/bin/genesis
 	fi
-# UUUUUUHHHHHHHHH	
+	# if gpm not removed, remove it
 	if [ -f $HOME/gpm ]; then
 		read -r -p "Do you want to remove gpm as well? [Y/n]: " -n 1
 		echo
@@ -610,17 +611,19 @@ elif [[ "$1" == "uninstall" ]]; then
 			if [ -f $HOME/gpm ]; then
 				rm $HOME/gpm
 			fi
-
+			
+			# remove completion script
 			if [ -f $HOME/gpm_complete ]; then
 				rm $HOME/gpm_complete
 			fi
-
+			
+			# update .bash_aliases
 			if [ -f $HOME/.bash_aliases ]; then
 				grep -v 'gpm' $HOME/.bash_aliases > $HOME/.temp
 				mv $HOME/.temp $HOME/.bash_aliases
 			fi
+			# remove completion
 			complete -r gpm
-			source $HOME/.bash_aliases
 		fi
 	fi
 # unknown command
