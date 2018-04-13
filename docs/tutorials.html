@@ -1,0 +1,85 @@
+<html>
+
+<head>
+  <title>Genesis - Tutorials</title>
+  <link rel="icon" href="imgs/gecko.png" />
+  <link rel="stylesheet" type="text/css" href="css/sunburst.css" />
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+</head>
+
+<body>
+  <div id="main" class="scrollable">
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="topnav" id="myTopnav">
+          <a href="index.html">Home</a>
+          <a href="usage.html">Usage</a>
+          <a href="#" class="active">Tutorials</a>
+            <a href="https://github.com/sleepless-p03t/genesis6" target="_blank">GitHub</a>
+          <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a>
+        </div>
+        <div class="centered">
+          <div class="contents">
+            <h1 class="main-title">Tutorials</h1>
+            <p>Let's make a new module</p>
+            <p>Genesis is installed to the home directory</p>
+            <pre class="prettyprint">
+cd ~/genesis6/
+# we'll make a module called 'example'
+bash mkmod example
+# Info and instructions displayed here
+# Directories and files are generated
+cd example/lib
+vim example.rb</pre>
+            <p>Now let's edit the module's main script</p>
+            <pre class="prettyprint linenums">
+# module name
+def mname
+  "example"
+end
+
+# module commands, generate pre-defined
+def cmds
+  [ "generate", "example" ]
+end
+
+# custom variables to be set, used by the tab completer
+# retrievable via vhash passed to generate function
+def vars
+  [ "example", "file", "whatever" ]
+end
+
+# use built-in extensions
+def use
+  [ "msfvenom" ]
+end
+
+# Defined generation function
+def generate(vhash)
+# vhash: a hash which contains variables and their values
+# do what you want here
+end
+
+# Anything that isn't a class, module, or function is ignored</pre>
+            <p>Once everything is edited, run the bgem script passing the module name as the only argument</p>
+            <pre class="prettyprint">
+cd ~/genesis6/
+bash bgem example
+# assuming no errors, the module will be packed into a gemfile
+# follow prompts to finish up</pre>
+            <p>If you want your module added to the official project, do the following:</p>
+            <ul class="info">
+              <li>Email the module to <a style="color: #2cdfe4;" href="mailto:sleepless.genesis6@gmail.com?Subject=New%20module" target="_top">sleepless</a></li>
+              <li>Briefly explain the module's purpose</li>
+              <p style="display: inline"><br /><b style="color: #2cdfe4;">Note:</b> Modules will be tested, reviewed, and approved prior to release.</p>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/script.js"></script>
+</body>
+
+</html>
