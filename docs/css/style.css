@@ -87,33 +87,12 @@ ul {
   content: "\2756  ";
   color: #00FFFF;
 }
-.prompt {
-  color: white;
-}
-.com {
-  color: white;
+
+#info2 li:before {
+  content: "\2726  ";
+  color: #00FFFF;
 }
 
-.imgs img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 25%;
-}
-
-/*
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: #000;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(black, #2cdfe4, black);
-}
-*/
 .scrollable {
   position: absolute;
   width: 99%;
