@@ -26,13 +26,37 @@ Gem::Specification.new do |s|
 end
 EOF
 
+cat > $1/lib/$1.rb <<-EOF
+#!/bin/ruby
+
+def mname
+	"$1"
+end
+
+def cmds
+	[ "generate" ]
+end
+
+def vars
+	[ ]
+end
+
+def use
+	[ ]
+end
+
+def generate(vhash)
+
+end
+EOF
+
 echo "" > $1/gem.list
 echo "" > $1/deb.list
-echo "" > $1/$1.readme
+echo "" > $1/$1.txt
 
 echo "Module skeleton directory:$1 created"
 echo "Please edit $1/$1.gemspec and add scripts and any dependencies in $1/lib/"
 echo "List necessary gems in file $1/gem.list"
 echo "List necessary deb pkgs (apt-get capable) in file $1/deb.list"
-echo "Edit $1/$1.text to explain your module"
+echo "Edit $1/$1.txt to explain your module"
 echo "To pack your module into a gem and add it to genesis, run bgem $1"
