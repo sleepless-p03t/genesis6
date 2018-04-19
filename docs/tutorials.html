@@ -111,34 +111,34 @@ def generate(vhash)
 # admin only has one variable: lang
 lang = vhash["alang"]
 
-if lang == "bat" || lang == "batch"
-# execute the code generator:
-batch
-# Creates file bat.adm at: ~/.genesis/modifiers/batch/
-elsif lang == "ps1" || lang == "powershell"
-# execute the code generator:
-powershell
-# creates file psh.adm at: ~/.genesis/modifiers/powershell/
-end
+  if lang == "bat" || lang == "batch"
+    # execute the code generator:
+    batch
+    # Creates file bat.adm at: ~/.genesis/modifiers/batch/
+  elsif lang == "ps1" || lang == "powershell"
+    # execute the code generator:
+    powershell
+    # creates file psh.adm at: ~/.genesis/modifiers/powershell/
+  end
 
-# if you want to use the file later on:
-# To get the batch file location:
-batch_admin = batch_stub
+  # if you want to use the file later on:
+  # To get the batch file location:
+  batch_admin = batch_stub
 
-# To get the powershell file location:
-ps1_admin = powershell_stub
+  # To get the powershell file location:
+  ps1_admin = powershell_stub
 
-# To use the file in a system command:
-system("cat #{batch_admin}")
-# or
-system("cat #{ps1_admin}")
+  # To use the file in a system command:
+  system("cat #{batch_admin}")
+  # or
+  system("cat #{ps1_admin}")
 
-# To use the file in Ruby:
-batch_file = batch_admin.gsub('~', "#{Dir.home}")
-puts File.read(batch_file)
-# or
-ps1_file = ps1_admin.gsub('~', "#{Dir.home}")
-puts File.read(ps1_file)
+  # To use the file in Ruby:
+  batch_file = batch_admin.gsub('~', "#{Dir.home}")
+  puts File.read(batch_file)
+  # or
+  ps1_file = ps1_admin.gsub('~', "#{Dir.home}")
+  puts File.read(ps1_file)
 end
 
 # end snippet</pre>
