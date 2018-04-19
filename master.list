@@ -1,9 +1,7 @@
 test
 shellcode
-master
 java
 casm
-1
 gem:rb-readline
 gem:colorize
 deb:ruby-full
