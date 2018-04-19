@@ -10,6 +10,7 @@ BEGIN_casm
 casm/lib/objconv.exe
 casm/lib/casm.rb
 casm/casm.gemspec
+casm/casm.readme
 END_casm
 
 BEGIN_java

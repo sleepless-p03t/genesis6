@@ -215,7 +215,7 @@ def generate(vhash)
 	df.print("\tJava_#{clazz}_#{nmethod}")
 	df.close
 
-	system <<~EOS
+	system(<<~EOS
 		
 		cd #{java_path}
 
@@ -239,4 +239,5 @@ def generate(vhash)
 
 		cd #{cpwd}
 	EOS
+	)
 end
