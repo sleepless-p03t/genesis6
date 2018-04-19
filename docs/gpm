@@ -5,9 +5,11 @@ URL="https://raw.githubusercontent.com/sleepless-p03t/genesis6/master/"
 # cleanup directory stack at exit and exec bash to register bashrc changes 
 function cleanup
 {
-	while (( $? == 0 )); do
-		popd > /dev/null 2>&1
-	done
+	while read -r line; do
+		if [ $line -ne 1 ]; then
+			popd > /dev/null
+		fi
+	done< <(dirs -p | nl | awk '{ print $1 }')
 }
 
 # print info message
