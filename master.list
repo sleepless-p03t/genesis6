@@ -1,7 +1,9 @@
 test
 shellcode
+master
 java
 casm
+1
 gem:rb-readline
 gem:colorize
 deb:ruby-full
@@ -10,7 +12,6 @@ BEGIN_casm
 casm/lib/objconv.exe
 casm/lib/casm.rb
 casm/casm.gemspec
-casm/casm.txt
 casm/casm.gem
 END_casm
 
