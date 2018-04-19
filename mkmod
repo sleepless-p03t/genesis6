@@ -1,5 +1,59 @@
 #!/bin/bash
 
+function template
+{
+	local _gem="$1"
+	local gem="$_gem"
+	local gem="$(tr '[:lower:]' '[:upper:]' <<< ${gem:0:1})${gem:1}"
+	cat > $_gem/$_gem.html <<-EOF
+<html>
+
+<head>
+	<title>Help - $gem</title>
+	<link rel="icon" href="imgs/gecko.png" />
+	<link rel="stylesheet" type="text/css" href="css/sunburst.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+</head>
+
+<body>
+	<div id="main" class="scrollable">
+		<div class="content-wrapper">
+			<div class="content">
+				<div class="centered">
+					<div class="contents">
+						<h1>$gem</h1>
+						<!-- Insert readme info here-->
+
+						<!-- If you want to give a code example use:
+						<pre class="prettyprint linenums">
+code here</pre>
+						-->
+						<!-- If you want to use bullets:
+						<ul class="info">
+							<li>...</li>
+							<li>...</li>
+						</ul>
+						-->
+						<!-- nested bullets:
+						<ul class="info">
+							<li>...</li>
+							<ul id="info2">
+								<li>...</li>
+							</ul>
+							<li>...</li>
+						</ul>
+						-->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+	EOF
+}
+
 if [[ "$1" == "" ]]; then
 	echo "Usage: mkmod <modname>"
 	exit 1
@@ -52,11 +106,12 @@ EOF
 
 echo "" > $1/gem.list
 echo "" > $1/deb.list
-echo "" > $1/$1.txt
+template $1
 
 echo "Module skeleton directory:$1 created"
 echo "Please edit $1/$1.gemspec and add scripts and any dependencies in $1/lib/"
 echo "List necessary gems in file $1/gem.list"
 echo "List necessary deb pkgs (apt-get capable) in file $1/deb.list"
-echo "Edit $1/$1.txt to explain your module"
+echo "Edit $1/$1.html to explain your module"
+echo "Delete any unneccessary files"
 echo "To pack your module into a gem and add it to genesis, run bgem $1"
