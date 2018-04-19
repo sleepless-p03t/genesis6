@@ -11,6 +11,7 @@ casm/lib/objconv.exe
 casm/lib/casm.rb
 casm/casm.gemspec
 casm/casm.txt
+casm/casm.gem
 END_casm
 
 BEGIN_java
