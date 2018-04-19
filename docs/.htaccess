@@ -1,4 +1,5 @@
 <Files "gpm">
 ForceType application/octet-stream
-Header set Content-Disposition attachment 
+ForceType application/hex-stream .readme
+Header set Content-Disposition attachment
 </Files>
