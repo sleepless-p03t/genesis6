@@ -103,13 +103,13 @@ end
 # snippet
 
 def use
-[ "admin" ]
+  [ "admin" ]
 end
 
 def generate(vhash)
 
-# admin only has one variable: alang
-lang = vhash["alang"]
+  # admin only has one variable: alang
+  lang = vhash["alang"]
 
   if lang == "bat" || lang == "batch"
     # execute the code generator:
