@@ -51,6 +51,8 @@ def generate(vhash)
 	hname = vhash["hname"]
 	cname = vhash["cname"]
 
+	arch = vhash["arch"]
+
 	java = File.open("#{src_path}/#{clazz}.java", "w")
 	java.puts("public class #{clazz} {")
 	java.puts("\n\tpublic native void #{nmethod}(byte[] b);")

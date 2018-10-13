@@ -28,6 +28,7 @@ java/lib/include/win32/bridge/AccessBridgePackages.h
 java/lib/include/win32/jawt_md.h
 java/lib/include/win32/jni_md.h
 java/java.gemspec
+java/java.gem
 END_java
 
 BEGIN_shellcode
