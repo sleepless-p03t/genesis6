@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
 	s.description = "Java ASM"
 	s.authors = [ "Sleepless" ]
 	s.email = "rwcreator@gmail.com"
-	s.files = [ "lib/jasm.rb", "asmifier", "asm-5.2.jar" ]
+	s.files = [ "lib/jasm.rb", "lib/asmifier", "lib/asm-5.2.jar" ]
 	s.homepage = ""
 	s.license = 'MIT'
 end

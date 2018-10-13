@@ -1,6 +1,7 @@
 test
 shellcode
 java
+jasm
 casm
 gem:rb-readline
 gem:colorize
@@ -12,6 +13,13 @@ casm/lib/casm.rb
 casm/casm.gemspec
 casm/casm.gem
 END_casm
+
+BEGIN_jasm
+jasm/lib/asm-5.2.jar
+jasm/lib/jasm.rb
+jasm/jasm.gemspec
+jasm/jasm.gem
+END_jasm
 
 BEGIN_java
 java/lib/java.rb
